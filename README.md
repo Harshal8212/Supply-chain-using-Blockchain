@@ -1,6 +1,6 @@
-# Blockchain-Based Shipment Management System
+# Blockchain-Based Supply Chain Management System
 
-This project is a **blockchain-based shipment tracking system** built with **Hardhat** for smart contract development and a **React frontend**.
+This project is a **blockchain-based Supply Chain management system** built with **Hardhat** for smart contract development and a **React frontend**.
 
 ---
 
