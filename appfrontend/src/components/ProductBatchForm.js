@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import {setDefaults, fromLatLng} from 'react-geocode'
 setDefaults({
-  key: "AIzaSyDp9cO3h9EYAYmT5zNvlLfAx3bteFeFjek", // Your API key here.
+  key: "YOUR_GOOGLE_MAP_API_KEY", // Your API key here.
   language: "en", // Default language for responses.
   region: "es", // Default region for responses.
 });
