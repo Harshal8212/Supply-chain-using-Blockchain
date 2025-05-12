@@ -12,7 +12,15 @@ import TextField from '@mui/material/TextField';
 import "../css/PopUpModal.css";
 import { v4 as uuidv4 } from 'uuid';
 
+import {setDefaults, fromLatLng} from 'react-geocode'
+setDefaults({
+  key: "AIzaSyDp9cO3h9EYAYmT5zNvlLfAx3bteFeFjek", // Your API key here.
+  language: "en", // Default language for responses.
+  region: "es", // Default region for responses.
+});
 export default class ProductBatchForm extends React.Component {
+
+     
 
     state = { 
         prodName: "",
@@ -29,6 +37,45 @@ export default class ProductBatchForm extends React.Component {
         // Convert productPrice to number before multiplication
         return Number(productPrice) * 100;
     }
+
+    async getCoordinates() {
+
+        if (navigator.geolocation) {
+          const options = {
+              enableHighAccuracy: true,
+              timeout: Infinity,
+              maximumAge: 0,
+          };
+          
+      
+
+          const watchId = navigator.geolocation.watchPosition(
+              (position) => {
+                if (!position.coords) {
+                  alert("Fetching your location...");
+                  return;
+                }
+                  const { latitude, longitude } = position.coords;
+                   fromLatLng(latitude, longitude)
+                    .then(({ results }) => {
+                        const { lat, lng } = results[0].geometry.location;
+                        console.log(lat, lng);
+                        console.log(results[0].formatted_address);
+                         this.setState({ prodOrigin: results[0].formatted_address});
+                    })
+                    .catch(console.error);
+
+              },
+              (err) => console.log(err.message),
+              options
+          );
+          return () => navigator.geolocation.clearWatch(watchId);
+      } else {
+          alert('Geolocation is not supported by your browser.');
+      }
+       
+    
+}
 
     async createProductBatch(event) {
         event.preventDefault();
@@ -152,9 +199,15 @@ export default class ProductBatchForm extends React.Component {
                             </Grid>
                             <Grid item xs={6}>
                                 <label>Origin</label>
-                                <TextField required type="text" name="prodOrigin" placeholder="Country/Region of origin"
-                                    onChange={(event) => this.handleInput(event)} variant="filled"
-                                    InputProps={{ style: { backgroundColor: '#fff', borderRadius: '5px' } }} />
+                                 <TextField required type="text" name="prodOrigin" placeholder="Origin"
+                                        value={this.state.prodOrigin} onChange={(event) => this.handleInput(event)} variant="filled"
+                                        InputProps={{
+                                            readOnly: true,    // 👈 This makes it non-editable
+                                            style: { backgroundColor: '#f5f5f5' } // Optional: Greyed-out look
+                                        }} />
+                                <Button variant="outlined"  onClick={() => this.getCoordinates()}  style={{ padding: '10px 25px',color: 'white',  backgroundColor: '#7d5091', marginTop:'20px'}}>
+                                        Get Current Origin
+                                    </Button>
                             </Grid>
                             <Grid item xs={6}>
                                 <label>Shelf Life (Months)</label>
